@@ -1,42 +1,55 @@
+import random
+
 board = ['-','-','-',
          '-','-','-',
          '-','-','-'
-]
-playerx = "X"
+        ]
+player= "X"
+ai_marker='O'
 winner = None
 
 ## BOARD LOGIC
-def printboard(board):
-    print(board[0]+' |',board[1]+' |',board[2])
-    print('----------')
-    print(board[3]+' |',board[4]+' |',board[5])
-    print('----------')
-    print(board[6]+' |',board[7]+' |',board[8])
+def print_board(board):
+    print(board[0]+' |', board[1]+' |', board[2])
+    print('---------')
+    print(board[3]+' |', board[4]+' |', board[5])
+    print('---------')
+    print(board[6]+' |', board[7]+' |', board[8])
 
 ## PLAYER
-def player(board):
-    global playerx
+def player_move(board):
+    global player
     global winner
     p = int(input("Enter the location where you want to place (from 1-9): "))
     if 9 >= p >= 1:
         if board[p-1] == '-':
-            board[p-1] = playerx
+            board[p-1] = player
         else:
             print("Cell already occupied. Try again.")
-            player(board)
+            return player_move(board)
     else:
         print("Try again. You entered an invalid position.")
         player(board)
-
-def player2(board):
-    global playerx
+#AI
+def ai_move(board):
     global winner
-    if playerx=='X':
-        playerx='0'
+    position = random.randint(0, 8)
+    if board[position] == '-':
+        board[position] = ai_marker
+    else:
+        ai_move(board)
+
+def alternation(board):
+    global player
+    global winner
+    if player=='X' in board:
+        if check_win is True:
+            exit
+        else:
+            return ai_marker 
+    elif player=='X' not in board:
         return player(board)
-    elif playerx=='0':
-        playerx='X'
-        return player(board)
+
 
 def winlogic_row(board):
     ## for row
@@ -81,9 +94,16 @@ def check_win(board):
         exit()
 
 while True:
-    printboard(board)
-    player(board)
-    check_win(board)
-    printboard(board)  # print the board after the first player's move
-    player2(board)
-    check_win(board)
+    print_board(board)
+    player_move(board)
+    if check_win(board):
+        print_board(board)
+        print(f"{winner} has won!")
+        break
+
+    print_board(board)
+    ai_move(board)
+    if check_win(board):
+        print_board(board)
+        print(f"{winner} has won!")
+        break
