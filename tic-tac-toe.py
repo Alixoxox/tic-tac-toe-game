@@ -27,9 +27,12 @@ def player_move(board):
         else:
             print("Cell already occupied. Try again.")
             return player_move(board)
+    elif p==0:
+        print("Try again. You entered an invalid position.")
+        return player_move(board)
     else:
         print("Try again. You entered an invalid position.")
-        player(board)
+        return player_move(board)
 #AI
 def ai_move(board):
     global winner
@@ -102,6 +105,7 @@ while True:
         break
 
     print_board(board)
+    print("----------------xxxxx--------------------")
     ai_move(board)
     if check_win(board):
         print_board(board)
