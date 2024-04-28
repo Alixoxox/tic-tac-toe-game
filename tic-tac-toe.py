@@ -91,36 +91,96 @@ board = ['-','-','-',
          '-','-','-'
         ]
 
+####  HINT BOARD
+board_example = ['1','2','3',
+         '4','5','6',
+         '7','8','9'
+        ]
+
+def print_board_example(board_example):
+    print(board_example[0]+' |', board_example[1]+' |', board_example[2])
+    print('---------')
+    print(board_example[3]+' |', board_example[4]+' |', board_example[5])
+    print('---------')
+    print(board_example[6]+' |', board_example[7]+' |', board_example[8])
+
 player= "X"
 ai_marker='O'
 winner = None
 
+player_wins = 0
+ai_wins = 0
+draws = 0
+
 while True:
-    print_board(board)
-    print("."*30)
-    if player == "X":
-        if player_move(board):
-            if check_win(board):
-                print_board(board)
-                print("."*30)
-                print("--Player X has won!")
+    print("Welcome to Tic-Tac-Toe!")
+    print("To place your 'X', enter the number corresponding to the position on the board.")
+    print("Example Tic-Tac-Toe Board:")
+    print_board_example(board_example)
+    num_rounds = input("Enter the number of rounds you want to play (must be odd): ")
+
+    if num_rounds.isdigit():
+        num_round = int(num_rounds)
+
+        if num_round % 2 != 0:
+            for _ in range(1, num_round + 1):
+                board = ['-','-','-',
+                         '-','-','-',
+                         '-','-','-'
+                        ]
+                player = "X"
+                print(f"Round {_}")
+                while True:
+                    print_board(board)
+                    print("." * 30)
+                    if player == "X":
+                        if player_move(board):
+                            if check_win(board):
+                                print_board(board)
+                                print("." * 30)
+                                print("--Player X has won this round!")
+                                player_wins += 1
+                                break
+                            if check_draw(board):
+                                print_board(board)
+                                print("." * 30)
+                                print("--It's a draw this round!")
+                                draws += 1
+                                break
+                            player = "O"
+                    else:
+                        ai_move(board)
+                        if check_win(board):
+                            print_board(board)
+                            print("." * 30)
+                            print("--AI has won this round!")
+                            ai_wins += 1
+                            break
+                        if check_draw(board):
+                            print_board(board)
+                            print("." * 30)
+                            print("--It's a draw this round!")
+                            draws += 1
+                            break
+                        player = "X"
+
+                print("Current Score:")
+                print(f"Player: {player_wins}")
+                print(f"AI: {ai_wins}")
+                print(f"Draws: {draws}")
+
+                if player_wins > ai_wins:
+                    print("Congratulations! You are currently winning!!")
+                elif ai_wins > player_wins:
+                    print("GET your game together, AI is winning against you!")
+                else:
+                    print("As of now, the current game is heading towards a draw")
+
+            play_again = input("Do you want to play again? (yes/no): ")
+            if play_again.lower() != 'yes':
+                print("Thanks for playing!")
                 break
-            if check_draw(board):
-                print_board(board)
-                print("."*30)
-                print("--It's a draw!")
-                break
-            player = "O"
+        else:
+            print("Please enter an odd number!")
     else:
-        ai_move(board)
-        if check_win(board):
-            print_board(board)
-            print("."*30)
-            print("--Player O has won!")
-            break
-        if check_draw(board):
-            print_board(board)
-            print("."*30)
-            print("--It's a draw!")
-            break
-        player = "X"
+        print("Please enter a valid integer!!")
